@@ -22,15 +22,15 @@ export default async function () {
         // configure the view engine
         app.engine('hbs', hbs.express4({
             // defaultLayout: path.join(__dirname, 'views', 'layouts', 'default.hbs'),
-            layoutsDir: path.join(__dirname, '..', 'public', 'views', 'layouts'),
-            partialsDir: path.join(__dirname, '..', 'public', 'views', 'partials'),
+            layoutsDir: path.join(__dirname, '../../', 'public', 'views', 'layouts'),
+            partialsDir: path.join(__dirname, '../../', 'public', 'views', 'partials'),
         }));
 
         // set the view engine
         app.set('view engine', 'hbs');
 
         // configure views path
-        app.set('views', path.join(__dirname, '..', 'public', 'views'));
+        app.set('views', path.join(__dirname, '../../', 'public', 'views'));
 
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(bodyParser.json());
