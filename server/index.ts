@@ -1,22 +1,23 @@
-import * as express from 'express'
-import * as path from 'path'
-import * as morgan from 'morgan'
-import * as http from 'http'
-
-const app = express()
-app.set('port', 8000)
-
-app.use(express.static(path.join(__dirname, '..', 'build', 'static')))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use(morgan('dev'))
-
-app.all('/*', (req, res, next) => {
-    console.log('Reading the main route through http request, sending index.html');
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'))
-})
-
-const server = http.createServer(app)
-server.listen(app.get('port'), () => {
-    console.log('express listening on port ' + app.get('port'))
-})
+import * as http from 'http';
+import * as dotenv from 'dotenv';
+import setAPIRoutes from './app/routes/apiRoutes';
+import expressService from './config/express';
+import initHBS from './config/handlebars';
+import mailService from './config/mail';
+import mongoService from './config/mongoose';
+import initPassport from './config/passport';
+dotenv.config({ path: '.env' });
+console.log(process.env.PORT);
+(async () => {
+    await mongoService();
+    const app = await expressService();
+    const passport = initPassport();
+    const transporter = mailService();
+    initHBS();
+    setAPIRoutes(app, passport, transporter);
+    console.log('Starting Express Server'); http.createServer(app)
+        .listen(app.get('port'), () => {
+            console.log('Express listening on port ' + app.get('port'));
+        });
+})()
+.catch(console.error);
