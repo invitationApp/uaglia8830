@@ -1,14 +1,21 @@
 import * as React from 'react';
 import './App.css';
-import SingnIn from './Components/SignIn';
+import SignIn from './Components/SignIn/SignIn.Container';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import rootReducer from './store/RootReducer';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import thunk from 'redux-thunk';
 
+const store = createStore(rootReducer, applyMiddleware(thunk));
 class App extends React.Component {
   render() {
     return (
-      <Router>
-        <Route path="/" component={SingnIn}/>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <Route path="/" component={SignIn} />
+        </Router>
+      </Provider>
     );
   }
 }
